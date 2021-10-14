@@ -5,11 +5,14 @@ require_once 'app/Views/Partials/TaskBeginning.php';
 </br>
 <h1>Your active assignments:</h1>
     <ul>
-        <?php foreach ($tasks as $key => $task): ?>
+        <?php foreach ($this->tasks as $key => $task): ?>
             <li>
-                <?php if ($_SESSION['name'] === $task->getUser()) {echo "{$task->getTask()}";} ?>
-                <form method="post" action="/tasks/<?php echo $key; ?>">
+                <?php echo "{$task->getTask()}"; ?>
+                <form method="post" action="/tasks/delete/<?php echo $key; ?>">
                     <button type="submit">DELETE</button>
+                </form>
+                <form method="post" action="/tasks/edit/<?php echo $key; ?>">
+                    <button type="submit">EDIT</button>
                 </form>
             </li>
         <?php endforeach; ?>

@@ -37,7 +37,7 @@ class MysqlTaskRepository implements TaskRepository
         foreach ($tasks as $task)
         {
             if ($task['user'] === $_SESSION['user'])
-           array_push($collection, new Assignment($task['user'], $task['title']));
+                array_push($collection, new Assignment($task['user'], $task['title']));
         }
         return new TaskCollection($collection);
     }
@@ -57,5 +57,17 @@ class MysqlTaskRepository implements TaskRepository
         $sql = "DELETE FROM tasks WHERE title = ?";
         $stmt = $this->connection->prepare($sql);
         ($stmt->execute([$task->getTask()]));
+    }
+
+    public function taskEdit($oldTask, $newTask)
+    {
+        $data = [
+            'user' => $_SESSION['user'],
+            'oldtask' => $oldTask,
+            'newtask' => $newTask
+        ];
+        $sql = "UPDATE tasks SET title=:newtask WHERE user=:user AND title=:oldtask";
+        $stmt= $this->connection->prepare($sql);
+        $stmt->execute($data);
     }
 }

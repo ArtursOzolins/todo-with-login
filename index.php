@@ -13,8 +13,10 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
 
     $r->addRoute('GET', '/tasks', 'App\Controllers\AssignmentController@index');
     $r->addRoute('GET', '/tasks/add', 'App\Controllers\AssignmentController@add');
-    $r->addRoute('POST', '/tasks', 'App\Controllers\AssignmentController@store');
-    $r->addRoute('POST', '/tasks/{id}', 'App\Controllers\AssignmentController@delete');
+    $r->addRoute('POST', '/tasks', 'App\Controllers\AssignmentController@storeNew');
+    $r->addRoute('POST', '/tasks/delete/{id}', 'App\Controllers\AssignmentController@delete');
+    $r->addRoute('POST', '/tasks/edit/{id}', 'App\Controllers\AssignmentController@editTask');
+    $r->addRoute('POST', '/tasks/{id}', 'App\Controllers\AssignmentController@storeEdited');
 });
 
 // Fetch method and URI from somewhere

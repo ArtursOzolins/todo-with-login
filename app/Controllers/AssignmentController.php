@@ -13,42 +13,17 @@ class AssignmentController
 {
 
     private TaskRepository $taskRepository;
+    private array $tasks;
 
     public function __construct()
     {
         $this->taskRepository = new MysqlTaskRepository();
+        $this->tasks = $this->taskRepository->readFromFile()->getTasks();
     }
 
     public function index()
     {
-        $tasks = (($this->taskRepository->readFromFile()))->getTasks();
-        /*
-         * $taskList = [];
-        foreach ($tasks as $task)
-        {
-            array_push($taskList, $task->getTask());
-        }
-
-        $loader = new \Twig\Loader\ArrayLoader(['task'=>'Do {{ name }}']);
-        $twig = new \Twig\Environment($loader);
-        foreach ($taskList as $task)
-        {
-            echo $twig->render('task', ['name' => $task]);
-        }
-         */
-
         require_once 'app/Views/Tasks/AppView.php';
-
-        /*
-         * <?php foreach ($tasks as $key => $task): ?>
-            <li>
-                <?php echo "{$task->getTask()}"; ?>
-                    <form method="post" action="/<?php echo $key; ?>">
-                        <button type="submit">DELETE</button>
-                    </form>
-            </li>
-        <?php endforeach; ?>
-         */
     }
 
     public function add()
@@ -56,11 +31,11 @@ class AssignmentController
         require_once 'app/Views/Tasks/AddView.php';
     }
 
-    public function store(): void
+    public function storeNew(): void
     {
-        $this->taskRepository->addToFile(new Assignment($_SESSION['user'] ,$_POST['task']));
+            $this->taskRepository->addToFile(new Assignment($_SESSION['user'], $_POST['task']));
 
-        header('Location: /tasks');
+            header('Location: /tasks');
     }
 
     public function delete(string $key): void
@@ -69,6 +44,18 @@ class AssignmentController
         $collection = $repository->getTasks();
         $this->taskRepository->delete($collection[(int)$key]);
 
+        header('Location: /tasks');
+    }
+
+    public function editTask(int $key)
+    {
+        require_once 'app/Views/Tasks/EditView.php';
+    }
+
+    public function storeEdited($key)
+    {
+        $oldTask = $this->tasks[(int)$key]->getTask();
+        $this->taskRepository->taskEdit($oldTask, $_POST['task']);
         header('Location: /tasks');
     }
 }

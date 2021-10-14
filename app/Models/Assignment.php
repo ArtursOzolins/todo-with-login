@@ -23,4 +23,9 @@ class Assignment
     {
         return $this->user;
     }
+
+    public function setTask(string $task): void
+    {
+        $this->task = $task;
+    }
 }
